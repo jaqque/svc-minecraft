@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# THIS FILE WAS AUTOMATICALLY CREATED #
+# EDIT AT OWN RISK #
+
 # does named pipe name exist but not a named pipe?
 # create named pipe, if it doesn't already
 # trap signals

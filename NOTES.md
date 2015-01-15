@@ -6,9 +6,9 @@ TODO
 
 Steps to Master:
 
-* [ ] files/run functional
-   * [ ] read in ENV variables (envdir)
-* [ ] files/log/run functional
+* [X] files/run functional
+   * [X] read in ENV variables (envdir)
+* [X] files/log/run functional
 * [ ] install.sh functional
 * [ ] installation documentation
 
