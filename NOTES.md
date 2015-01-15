@@ -34,6 +34,7 @@ Either `./install.sh` or `make install` (`make install` can call `./install.sh`)
 * `-r|--ram` initial / maximum ram (default: minecraft default (512kB? i dunno))
   [idea: default 1 GB; sounds reasonable]
 * `-f|--force` override checks for existing directory, existant java and server.jar
+* `-P|--png` path to image to use for server-icon.png (check/force dimenstions?)
 
 Dependencies
 ------------
