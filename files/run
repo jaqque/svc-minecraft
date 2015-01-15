@@ -21,8 +21,6 @@ jar='server.jar'
 
 abort() {
     printf 'E: %s\n' "$@"
-    touch down
-    svc -d .
     exit 1
 }
 
