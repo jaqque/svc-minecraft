@@ -32,6 +32,7 @@ if [ ! -e "$pipe" ]; then
     mkfifo "$pipe" || abort "Cannot create $pipe"
 fi
 
+# Does it have to be a symlink?
 if [ ! -e "$jar" -o ! -h "$jar" ]; then
     abort "$jar is not a symlink to the appropriate minecraft server jarfile"
 fi
@@ -87,9 +88,9 @@ start() {
       java -jar "$jar" nogui
       result=$?
       if [ $result -ne 0 ]; then
-         printf 'Abnormal End: Server exited with %d\n' $result
+         printf 'W: Server exited with %d\n' $result
       fi
-      kill -1 $$
+      kill -1 $$; # hang up on master monitoring shell
    }
 }
 
