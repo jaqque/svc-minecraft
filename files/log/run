@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# THIS FILE WAS AUTOMATICALLY CREATED #
+# EDIT AT OWN RISK #
+
+exec 2>&1
+exec multilog t n999999 ./main
