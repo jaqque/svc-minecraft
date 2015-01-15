@@ -7,6 +7,7 @@ TODO
 Steps to Master:
 
 * [ ] files/run functional
+   * [ ] read in ENV variables (envdir)
 * [ ] files/log/run functional
 * [ ] install.sh functional
 * [ ] installation documentation
@@ -14,6 +15,8 @@ Steps to Master:
 ### Optional, but Nice to Have
 
 * [ ] Full Documentation
+* [ ] Helper scripts (op, ban, jail, give items, etc)
+* [ ] Ability to install to existing Minecraft server
 
 Install
 -------
@@ -29,12 +32,19 @@ Either `./install.sh` or `make install` (`make install` can call `./install.sh`)
 * `-p|--port` port to run on (default: minecraft default (25565))
 * `-I|--ip` IP to bind to (default: minecraft default (0.0.0.0))
 * `-w|--world` level name (default: minecraft default (world))
-* `--eula=yes` eula (default: blank) https://account.mojang.com/documents/minecraft_eula
+* `--eula=yes` eula (default: blank)
+   https://account.mojang.com/documents/minecraft_eula
 * `-m|--motd` motd (default: minecraft default (A Minecraft Server))
-* `-r|--ram` initial / maximum ram (default: minecraft default (512kB? i dunno))
-  [idea: default 1 GB; sounds reasonable]
+* `-r|--ram` initial / maximum ram (default: minecraft default (512kB? i
+   dunno)) [idea: default 1 GB; sounds reasonable]
 * `-f|--force` override checks for existing directory, existant java and server.jar
 * `-P|--png` path to image to use for server-icon.png (check/force dimenstions?)
+* `-u|--user` user to install as (default: current, if UID != root; minecraft
+   if UID = root)
+
+
+If you really want Xms and Xmm to be different, specify the values in JAVA_OPTS and
+ignore RAM.
 
 Dependencies
 ------------
@@ -68,6 +78,7 @@ line prints var=; neither of which are suitable for passing a "server" or
 * `SERVER=` as path to minecraft.jar (instead of symlink ?)
 * `JAVA_OPTS=` as additional opstions (nogui, server, -d64, etc)
 * `RAM=` allocated RAM (-Xms and -Xmx)
+* `FIFO=` name of named pipe
 
 server.properties
 -----------------
