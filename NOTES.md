@@ -9,6 +9,11 @@ Steps to Master:
 * [ ] files/run functional
 * [ ] files/log/run functional
 * [ ] install.sh functional
+* [ ] installation documentation
+
+### Optional, but Nice to Have
+
+* [ ] Full Documentation
 
 Install
 -------
