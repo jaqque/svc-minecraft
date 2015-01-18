@@ -15,7 +15,7 @@ help() {
    # this format loosely based upon GNU coreutils 8.23 --help format
 
    cat <<EOF
-Usage: install.sh [OPTION]... DIRECTORY
+Usage: $(basename "$0") [OPTION]... DIRECTORY
 Installs the Minecraft server supervision files to DIRECTORY
 
 Mandatory arguments to long options are mandatory for short options too.
