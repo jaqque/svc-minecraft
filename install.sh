@@ -131,7 +131,13 @@ if [[ $# -gt 0 ]]; then
 fi
 
 verify_target() {
-   :
+   if [[ -e "$1" ]]; then
+      if [[ -d "$1" ]]; then
+         error "Installing to an existing Minecraft server isn't supported ... yet!"
+      else
+         error "$1: file exists, and isn't a directory"
+      fi
+   fi
 }
 
 verify_ip() {
