@@ -141,7 +141,21 @@ verify_target() {
 }
 
 verify_ip() {
-   :
+   # At least make sure it has three dots
+   local valid=0
+   case $1 in
+      .*) ;; # begins with a dot? nope!
+      *.) ;; # ends with a dot? nope!
+      *..* ) ;; # two dots in a row? nope!
+      *.*.*.*.*) ;; # dotted quint?! nope! (also catches dotted hexes, and beyond)
+      *' '*) ;; # spaces? nope!
+      *.*.*.*) valid=1 ;; # Close enough to a valid IP address, I guess
+      *) ;; # Not enough dots? nope!
+   esac
+   if [[ $valid -eq 0 ]]; then
+      error "$1: Not even close to a valid IP address"
+   fi
+   # Could still be invalid, but at least it has three dots.
 }
 
 verify_jar() {
