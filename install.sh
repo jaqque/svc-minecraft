@@ -130,6 +130,57 @@ if [[ $# -gt 0 ]]; then
    error
 fi
 
+verify_target() {
+   :
+}
+
+verify_ip() {
+   :
+}
+
+verify_jar() {
+   :
+}
+
+verify_jvm() {
+   :
+}
+
+verify_motd() {
+   :
+}
+
+verify_png() {
+   :
+}
+
+verify_port() {
+   :
+}
+
+verify_ram() {
+   :
+}
+
+verify_user() {
+   :
+}
+
+verify_world() {
+   :
+}
+
+verify_target "$target"
+verify_ip "$ip"
+verify_jar "$jar"
+verify_jvm "$jvm"
+verify_motd "$motd"
+verify_png "$png"
+verify_port "$port"
+verify_ram "$ram"
+verify_user "$user"
+verify_world "$word"
+
 set_ip() {
    # is $1 a valid IP? Do we care?
    printf 'server-ip=%s\n' $1
