@@ -141,6 +141,8 @@ verify_target() {
 }
 
 verify_ip() {
+   [[ $1 ]] || return 0; # blank is okay!
+
    # At least make sure it has three dots
    local valid=0
    case $1 in
@@ -159,7 +161,20 @@ verify_ip() {
 }
 
 verify_jar() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+
+   # should probably ensure it has a *.jar suffix
+   if [[ ! -f $1 ]]; then
+      error "$1: no such Minecraft server jar"
+   fi
+
+   local valid=0
+   case $1 in
+      *.jar) valid=1 ;;
+   esac
+   if [[ $valid -eq 0 ]]; then
+      error "$1: Doesn't look like a jar file to me."
+   fi
 }
 
 verify_jvm() {
