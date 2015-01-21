@@ -197,7 +197,17 @@ verify_motd() {
 }
 
 verify_png() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+
+   [[ -f $1 ]] || error "$1: No such file"
+
+   local valid=0
+   case $1 in
+      *.png) valid=1 ;;
+   esac
+   if [[ $valid -eq 0 ]]; then
+      error "$1: Doesn't look like a PNG to me."
+   fi
 }
 
 verify_port() {
