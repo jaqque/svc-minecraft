@@ -190,7 +190,10 @@ verify_jvm() {
 }
 
 verify_motd() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+
+   local max=59
+   [[ ${#1} -gt $max ]] && error "MOTD too long. Max=$max; supplied=${#1}"
 }
 
 verify_png() {
