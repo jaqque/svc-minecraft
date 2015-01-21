@@ -227,11 +227,15 @@ verify_ram() {
 }
 
 verify_user() {
-   :
+   [[ $1 ]] || return 0; #blank is okay!
+
+   id "$1" &> /dev/null || error "$1: no such user"
 }
 
 verify_world() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+   
+   # We'll assume that it's okay
 }
 
 verify_target "$target"
