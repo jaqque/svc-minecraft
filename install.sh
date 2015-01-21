@@ -212,7 +212,7 @@ verify_png() {
 
 verify_port() {
    [[ $1 ]] || return 0; # blank is okay!
-   
+
    # a non-number will parse as zero
    local privileged=1024
    local maxport=65535
@@ -221,7 +221,9 @@ verify_port() {
 }
 
 verify_ram() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+
+   # uhm...
 }
 
 verify_user() {
