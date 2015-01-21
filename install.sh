@@ -131,6 +131,8 @@ if [[ $# -gt 0 ]]; then
 fi
 
 verify_target() {
+   [[ $1 ]] || { help; error; }; # blank is a problem!
+
    if [[ -e "$1" ]]; then
       if [[ -d "$1" ]]; then
          error "Installing to an existing Minecraft server isn't supported ... yet!"
