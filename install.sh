@@ -214,7 +214,7 @@ verify_port() {
    [[ $1 ]] || return 0; # blank is okay!
 
    # a non-number will parse as zero
-   local privileged=1024
+   local privileged=1023
    local maxport=65535
    [[ $1 -le $privileged ]] && error "$1: port must be greater than $privileged"
    [[ $1 -gt $maxport ]] && error "$1: port must be less than $maxport"
