@@ -178,7 +178,13 @@ verify_jar() {
 }
 
 verify_jvm() {
-   :
+   [[ $1 ]] || return 0; # blank is okay!
+
+   # Exists, and is executable.
+   # Could verify the -version information
+
+   [[ -e $1 ]] || error "$1: No such file."
+   [[ -x $1 ]] || error "$1: Not an executable"
 }
 
 verify_motd() {
@@ -208,7 +214,7 @@ verify_world() {
 verify_target "$target"
 verify_ip "$ip"
 verify_jar "$jar"
-verify_jvm "$jvm"
+verify_jvm "$java"
 verify_motd "$motd"
 verify_png "$png"
 verify_port "$port"
