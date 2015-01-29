@@ -60,6 +60,13 @@ Logs
 * gzip then when rotating? Minecraft itself does this
 * logs are duplicated. Is this a real problem?
 
+Server on Demand
+----------------
+
+In order to have a server start only upon login instead of at ping, a
+minimal server would have to be created. This is way beyond the scope
+of this project at this time.
+
 Readproctitle
 -------------
 
