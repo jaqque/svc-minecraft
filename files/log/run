@@ -4,4 +4,8 @@
 # EDIT AT OWN RISK #
 
 exec 2>&1
-exec multilog t n999999 ./main
+exec multilog t n999999 ./main \
+   '-*' '+@* [*] [*]: There are */* players online:' '=players' \
+   '-*' '+@* */WARN]: *' '=WARN' \
+   '-*' '+@* */ERROR]: *' '=ERROR' \
+   '-*' '+@* */FATAL]: *' '=FATAL'
