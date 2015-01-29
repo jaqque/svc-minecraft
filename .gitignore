@@ -8,7 +8,7 @@ logs/
 server.properties
 world/
 
-# supervision artifcats
+# supervision artifacts
 supervise/
 ENV/
 
