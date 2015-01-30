@@ -26,7 +26,7 @@ Mandatory arguments to long options are mandatory for short options too.
   -i, --interactive    Uses question/answer to install
   -I, --ip=IP          Binds Minecraft server to IP
   -j, --jar=SERVER     Uses SERVER as server.jar
-  -J, --java=JVM       Use JVM
+  -J, --jvm=JAVA       Use JAVA as the JVM
   -m, --motd=MOTD      Assigns MOTD to motd
   -o, --options=OPTS   Additional java options
   -P, --png=IMAGE      Symlinks IMAGE to server-icon.png
@@ -81,10 +81,10 @@ while [[ "$1" == -* ]]; do
          jar=$2; shift 2 ;;
       --jar=*) jar=${1#*=}; shift ;;
 
-      -J|--java)
+      -J|--jvm|--java)
          if [[ -z $2 ]]; then help; error "$1 requires a path to java (eg: /usr/bin/java)"; fi
-         java=$2; shift 2 ;;
-      --java=*) java=${1#*=}; shift ;;
+         jvm=$2; shift 2 ;;
+      --jvm=*|--java=*) jvm=${1#*=}; shift ;;
 
       -m|--motd)
          if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: \"A Minecraft Server\")"; fi
@@ -93,8 +93,8 @@ while [[ "$1" == -* ]]; do
 
       -o|--options)
          if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: \"-Xincgc\")"; fi
-         java_options=$2; shift 2 ;;
-      --options=*) java_options=${1#*=}; shift ;;
+         jvm_options=$2; shift 2 ;;
+      --options=*) jvm_options=${1#*=}; shift ;;
 
       -P|--png)
          if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: server-icon.png)"; fi
@@ -193,7 +193,7 @@ verify_jar() {
    fi
 }
 
-verify_java_options() {
+verify_jvm_options() {
    [[ $1 ]] || return 0; # blank is okay!
 }
 
@@ -280,14 +280,14 @@ set_user() {
    fi
 }
 
-set_java() {
+set_jvm() {
    cat<<EOF
 ${1:+$1}
 Path to desired JVM
 EOF
 }
 
-set_java_options() {
+set_jvm_options() {
    cat<<EOF
 ${1:+$1}
 Additional Java options
@@ -306,8 +306,8 @@ EOF
 verify_target "$target"
 verify_ip "$ip"
 verify_jar "$jar"
-verify_java_options "$java_options"
-verify_jvm "$java"
+verify_jvm_options "$jvm_options"
+verify_jvm "$jvm"
 verify_motd "$motd"
 verify_png "$png"
 verify_port "$port"
@@ -321,6 +321,6 @@ set_world "$world"
 set_motd "$motd"
 
 set_user $user
-set_java "$java"
-set_java_options "$java_options"
+set_jvm "$jvm"
+set_jvm_options "$jvm_options"
 set_jar "$jar"
