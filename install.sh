@@ -32,7 +32,7 @@ Mandatory arguments to long options are mandatory for short options too.
   -P, --png=IMAGE      Symlinks IMAGE to server-icon.png
   -p, --port=PORT      Binds Minecraft server to PORT
   -q, --quiet          Supresses warnings
-  -r, --RAM=SIZE       Allocats SIZE to server at start
+  -r, --RAM=SIZE       Allocates SIZE to server at start
   -u, --user=ACCOUNT   Changes to ACCOUNT prior to installing / starting
   -w, --world=WORLD    Assigns WORLD to level-name
   -v, --verbose        Increases verbosity
