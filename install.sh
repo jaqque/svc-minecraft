@@ -261,22 +261,18 @@ verify_user "$user"
 verify_world "$word"
 
 set_ip() {
-   # is $1 a valid IP? Do we care?
    printf 'server-ip=%s\n' $1
 }
 
 set_motd() {
-   # MOTD can only be 59 characters. Warn?
    printf 'motd=%s\n' "$1"
 }
 
 set_port() {
-   # is $1 a valid port? Do we care? Do we care if it's <1024?
    printf 'server-port=%s\n' $1
 }
 
 set_world() {
-   # If the target dir already exists, we could check that this is a valid path.
    printf 'level-name=%s\n' "$1"
 }
 
@@ -294,11 +290,6 @@ set_user() {
 set_user $user
 
 set_java() {
-
-   if [[ $1 ]] && [[ ! -x $1 ]]; then
-      error "$1: no such file"
-   fi
-
    cat<<EOF
 ${1:+$1}
 Path to desired JVM
@@ -317,11 +308,6 @@ EOF
 set_java_options "$java_options"
 
 set_jar() {
-
-   if [[ $1 ]] && [[ ! -e $1 ]]; then
-      error "$1: no such file"
-   fi
-
    cat<<EOF
 ${1:+$1}
 Path to desired Minecraft server jar
