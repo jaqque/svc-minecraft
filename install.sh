@@ -324,3 +324,7 @@ set_user $user
 set_jvm "$jvm"
 set_jvm_options "$jvm_options"
 set_jar "$jar"
+
+# set_ram
+# set_png
+# set_target
