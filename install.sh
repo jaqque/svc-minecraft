@@ -53,6 +53,8 @@ if [ -z "$1" ]; then
    error
 fi
 
+## "Definers"
+
 # looks like passing "option=" will pass validation, but likely
 # cause problems later. Caveat emptor.
 while [[ "$1" == -* ]]; do
@@ -135,6 +137,12 @@ if [[ $# -gt 0 ]]; then
    help
    error
 fi
+
+# TODO? Combine like options, so its verifier is followed
+# immediately by its setter
+# eg verify_target() {...}; set_target() {...};
+
+## Verifiers
 
 verify_target() {
    [[ $1 ]] || { help; error; }; # blank is a problem!
@@ -248,17 +256,7 @@ verify_world() {
    # We'll assume that it's okay
 }
 
-verify_target "$target"
-verify_ip "$ip"
-verify_jar "$jar"
-verify_java_options "$java_options"
-verify_jvm "$java"
-verify_motd "$motd"
-verify_png "$png"
-verify_port "$port"
-verify_ram "$ram"
-verify_user "$user"
-verify_world "$word"
+## Setters
 
 set_ip() {
    printf 'server-ip=%s\n' $1
@@ -276,18 +274,11 @@ set_world() {
    printf 'level-name=%s\n' "$1"
 }
 
-set_port $port
-set_ip $ip
-set_world "$world"
-set_motd "$motd"
-
 set_user() {
    if [[ "$1" ]]; then
       sed -e "/setuidgid/s/minecraft/$1/" files/run
    fi
 }
-
-set_user $user
 
 set_java() {
    cat<<EOF
@@ -296,16 +287,12 @@ Path to desired JVM
 EOF
 }
 
-set_java "$java"
-
 set_java_options() {
    cat<<EOF
 ${1:+$1}
 Additional Java options
 EOF
 }
-
-set_java_options "$java_options"
 
 set_jar() {
    cat<<EOF
@@ -314,4 +301,26 @@ Path to desired Minecraft server jar
 EOF
 }
 
+# Do it
+
+verify_target "$target"
+verify_ip "$ip"
+verify_jar "$jar"
+verify_java_options "$java_options"
+verify_jvm "$java"
+verify_motd "$motd"
+verify_png "$png"
+verify_port "$port"
+verify_ram "$ram"
+verify_user "$user"
+verify_world "$word"
+
+set_port $port
+set_ip $ip
+set_world "$world"
+set_motd "$motd"
+
+set_user $user
+set_java "$java"
+set_java_options "$java_options"
 set_jar "$jar"
