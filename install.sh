@@ -28,6 +28,7 @@ Mandatory arguments to long options are mandatory for short options too.
   -j, --jar=SERVER     Uses SERVER as server.jar
   -J, --java=JVM       Use JVM
   -m, --motd=MOTD      Assigns MOTD to motd
+  -o, --options=OPTS   Additional java options
   -P, --png=IMAGE      Symlinks IMAGE to server-icon.png
   -p, --port=PORT      Binds Minecraft server to PORT
   -q, --quiet          Supresses warnings
@@ -87,6 +88,11 @@ while [[ "$1" == -* ]]; do
          if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: \"A Minecraft Server\")"; fi
          motd=$2; shift 2 ;;
       --motd=*) motd=${1#*=}; shift ;;
+
+      -o|--options)
+         if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: \"-Xincgc\")"; fi
+         java_options=$2; shift 2 ;;
+      --options=*) java_options=${1#*=}; shift ;;
 
       -P|--png)
          if [[ -z $2 ]]; then help; error "$1 requires an argument (eg: server-icon.png)"; fi
@@ -179,6 +185,10 @@ verify_jar() {
    fi
 }
 
+verify_java_options() {
+   [[ $1 ]] || return 0; # blank is okay!
+}
+
 verify_jvm() {
    [[ $1 ]] || return 0; # blank is okay!
 
@@ -241,6 +251,7 @@ verify_world() {
 verify_target "$target"
 verify_ip "$ip"
 verify_jar "$jar"
+verify_java_options "$java_options"
 verify_jvm "$java"
 verify_motd "$motd"
 verify_png "$png"
@@ -296,6 +307,14 @@ EOF
 
 set_java "$java"
 
+set_java_options() {
+   cat<<EOF
+${1:+$1}
+Additional Java options
+EOF
+}
+
+set_java_options "$java_options"
 
 set_jar() {
 
