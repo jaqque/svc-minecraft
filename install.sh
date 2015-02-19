@@ -55,7 +55,7 @@ fi
 
 ## "Definers"
 
-# looks like passing "option=" will pass validation, but likely
+# looks like passing "--option=" will pass validation, but likely
 # cause problems later. Caveat emptor.
 while [[ "$1" == -* ]]; do
    case "$1" in
@@ -72,12 +72,10 @@ while [[ "$1" == -* ]]; do
       --directory=*) target=${1#*=}; shift ;;
 
       --eula)
-         if [[ $2 != 'yes' ]]; then help; error "EULA must be accepted"; fi
-         eula=yes; shift 2 ;;
-
+         if [[ -z $2 ]]; then help; error "$1 must be accepted"; fi
+         eula=$2; shift 2 ;;
       --eula=*)
-         if [[ ${1#*=} != 'yes' ]]; then help; error "EULA must be accepted"; fi
-         eula=yes; shift ;;
+         eula==${1#*=}; shift ;;
 
       -I|--ip)
          if [[ -z $2 ]]; then help; error "$1 requires an address (eg: 0.0.0.0)"; fi
@@ -149,6 +147,9 @@ fi
 # TODO? Combine like options, so its verifier is followed
 # immediately by its setter
 # eg verify_target() {...}; set_target() {...};
+
+# TODO? Call verifier immediately after it's defined
+# eg verify_foo() {...; }; verify_foo;
 
 ## Verifiers
 
@@ -264,6 +265,14 @@ verify_world() {
    # We'll assume that it's okay
 }
 
+verify_eula() {
+   [[ $1 ]] || return 0; # blank is okay!
+
+   if [[ $1 != 'yes' ]]; then
+      error "EULA must be accepted";
+   fi
+}
+
 ## Setters
 
 set_ip() {
@@ -310,10 +319,11 @@ EOF
 }
 
 set_eula() {
-   if [[ $1 == 'yes' ]]; then
-      echo 'EULA accepted'
-   fi
+   case "$1" in
+      true|yes) printf 'eula=true\n' ;;
+   esac
 }
+
 # Do it
 
 verify_target "$target"
@@ -327,6 +337,7 @@ verify_port "$port"
 verify_ram "$ram"
 verify_user "$user"
 verify_world "$word"
+verify_eula "$eula"
 
 set_port $port
 set_ip $ip
