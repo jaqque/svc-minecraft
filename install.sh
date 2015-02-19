@@ -71,6 +71,14 @@ while [[ "$1" == -* ]]; do
          target=$2; shift 2 ;;
       --directory=*) target=${1#*=}; shift ;;
 
+      --eula)
+         if [[ $2 != 'yes' ]]; then help; error "EULA must be accepted"; fi
+         eula=yes; shift 2 ;;
+
+      --eula=*)
+         if [[ ${1#*=} != 'yes' ]]; then help; error "EULA must be accepted"; fi
+         eula=yes; shift ;;
+
       -I|--ip)
          if [[ -z $2 ]]; then help; error "$1 requires an address (eg: 0.0.0.0)"; fi
          ip=$2; shift 2 ;;
@@ -301,6 +309,11 @@ Path to desired Minecraft server jar
 EOF
 }
 
+set_eula() {
+   if [[ $1 == 'yes' ]]; then
+      echo 'EULA accepted'
+   fi
+}
 # Do it
 
 verify_target "$target"
@@ -324,6 +337,8 @@ set_user $user
 set_jvm "$jvm"
 set_jvm_options "$jvm_options"
 set_jar "$jar"
+
+set_eula "$eula"
 
 # set_ram
 # set_png
