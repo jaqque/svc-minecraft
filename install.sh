@@ -11,6 +11,13 @@ force=0;   # check for errors
 quiet=0;   # display warnings
 verbose=0; # supress excessive verbiage
 
+# globals
+eula_file='eula.txt';           # Minecraft's EULA acceptance
+env_dir='ENV';                  # daemontools' environment directory
+icon_file='server-icon.png';    # Minecraft's server icon (64x64 PNG)
+properties='server.properties'; # Minecraft's defaults
+source_dir="$(dirname "$0")";   # Where the wild files are
+
 help() {
    # this format loosely based upon GNU coreutils 8.23 --help format
 
@@ -48,6 +55,12 @@ error() {
    exit 1
 }
 
+warn() {
+   if [[ $1 ]]; then
+      printf 'W: %s\n' "$*"
+   fi
+}
+
 if [ -z "$1" ]; then
    help
    error
@@ -75,7 +88,7 @@ while [[ "$1" == -* ]]; do
          if [[ -z $2 ]]; then help; error "$1 must be accepted"; fi
          eula=$2; shift 2 ;;
       --eula=*)
-         eula==${1#*=}; shift ;;
+         eula=${1#*=}; shift ;;
 
       -I|--ip)
          if [[ -z $2 ]]; then help; error "$1 requires an address (eg: 0.0.0.0)"; fi
@@ -226,15 +239,12 @@ verify_motd() {
 verify_png() {
    [[ $1 ]] || return 0; # blank is okay!
 
-   [[ -f $1 ]] || error "$1: No such file"
-
-   local valid=0
    case $1 in
-      *.png) valid=1 ;;
+      http://*)  ;; # URIs are okay
+      https://*) ;;
+      *.png)     [[ -f $1 ]] || error "$1: No such file" ;;
+      *)         error "$1: Doesn't look like a PNG to me." ;;
    esac
-   if [[ $valid -eq 0 ]]; then
-      error "$1: Doesn't look like a PNG to me."
-   fi
 }
 
 verify_port() {
@@ -261,8 +271,11 @@ verify_user() {
 
 verify_world() {
    [[ $1 ]] || return 0; # blank is okay!
-   
-   # We'll assume that it's okay
+
+   if [[ -d  "$target" ]]; then
+      # if installing into current server, make sure the world exists
+      [[ ! -d "$1" ]] || error "$1: no such world"
+   fi
 }
 
 verify_eula() {
@@ -275,52 +288,89 @@ verify_eula() {
 
 ## Setters
 
+set_target() {
+   local target="$1"
+   mkdir "$target" || error "Could not make $target"
+   #mkdir "$target/$env_dir" || error "Could not make $target"
+   cp -a "$source_dir/files/." "$target"
+
+}
+
 set_ip() {
-   printf 'server-ip=%s\n' $1
+   [[ $1 ]] || return
+   printf 'server-ip=%s\n' $1 >> "$target/$properties"
 }
 
 set_motd() {
-   printf 'motd=%s\n' "$1"
+   [[ $1 ]] || return
+   printf 'motd=%s\n' "$1" >> "$target/$properties"
 }
 
 set_port() {
-   printf 'server-port=%s\n' $1
+   [[ $1 ]] || return
+   printf 'server-port=%s\n' $1 >> "$target/$properties"
 }
 
 set_world() {
-   printf 'level-name=%s\n' "$1"
+   [[ $1 ]] || return
+   printf 'level-name=%s\n' "$1" >> "$target/$properties"
 }
 
 set_user() {
-   if [[ "$1" ]]; then
-      sed -e "/setuidgid/s/minecraft/$1/" files/run
-   fi
+   [[ "$1" ]] || return
+   sed -i '' -e "/setuidgid/s/minecraft/$1/" "$target/run"
 }
 
 set_jvm() {
-   cat<<EOF
-${1:+$1}
-Path to desired JVM
-EOF
+   [[ $1 ]] || return
+   sed -i '' -e "1c\\
+$1
+" "$target/$env_dir/JAVA"
 }
 
 set_jvm_options() {
-   cat<<EOF
-${1:+$1}
-Additional Java options
-EOF
+   [[ $1 ]] || return
+   sed -i '' -e "1c\\
+$1
+" "$target/$env_dir/JAVA_OPTS"
 }
 
 set_jar() {
-   cat<<EOF
-${1:+$1}
-Path to desired Minecraft server jar
-EOF
+   [[ $1 ]] || return
+   sed -i '' -e "1c\\
+$1
+" "$target/$env_dir/SERVER"
+}
+
+set_ram() {
+   [[ $1 ]] || return
+   sed -i '' -e "1c\\
+$1
+" "$target/$env_dir/RAM"
 }
 
 set_eula() {
+   # TODO: Download and save the EULA
    case "$1" in
-      true|yes) printf 'eula=true\n' ;;
+      true|yes) printf 'eula=true\n' > "$eula_file" ;;
+   esac
+}
+
+set_png() {
+   [[ $1 ]] || return; # No PNG? No setting it.
+
+   case "$1" in
+      http://*|https://*)
+         wget \
+            --no-check-certificate \
+            --quiet \
+            --output-document="$target/$icon_file" \
+            "$1" || warn "Could not download $1"
+         printf '%s\n' "$1" > "$target/$icon_file.uri"
+         ;;
+      *) cp "$1" "$target"
+         ln -s "$(basename "$1")" "$target/$icon_file"
+         ;;
    esac
 }
 
@@ -339,18 +389,25 @@ verify_user "$user"
 verify_world "$word"
 verify_eula "$eula"
 
+
+# Create / Set up service directory
+set_target "$target"
+
+# server.properties
 set_port $port
 set_ip $ip
 set_world "$world"
 set_motd "$motd"
 
+# ENV
 set_user $user
 set_jvm "$jvm"
 set_jvm_options "$jvm_options"
 set_jar "$jar"
+set_ram "$ram"
 
+# eula.txt
 set_eula "$eula"
 
-# set_ram
-# set_png
-# set_target
+# server-icon.png
+set_png "$png"
