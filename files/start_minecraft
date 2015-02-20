@@ -22,11 +22,11 @@ exec 2>&1
 FIFO=${FIFO:-commands}
 JAVA=${JAVA:-java}
 RAM=${RAM:-1024m}
-RAM=${RAM:+-Xms$RAM -Xmx$RAM}
+RAM_OPTS=${RAM_OPTS:--Xms$RAM -Xmx$RAM}
 SERVER=${SERVER:-server.jar}
 
 abort() {
-    printf 'E: %s\n' "$@"
+    printf 'E: %s\n' "$*"
     exit 1
 }
 
@@ -92,7 +92,7 @@ start() {
    #  using { java; kill; } ensures the kill gets processed as soon
    #  as the java process exits
    tail -F -n1 "$FIFO" | {
-      "$JAVA" $RAM -jar "$SERVER" $JAVA_OPTS
+      "$JAVA" $RAM_OPTS -jar "$SERVER" $JAVA_OPTS
       result=$?
       if [ $result -ne 0 ]; then
          printf 'W: Server exited with %d\n' $result
