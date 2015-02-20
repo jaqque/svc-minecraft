@@ -10,7 +10,6 @@ world/
 
 # supervision artifacts
 supervise/
-ENV/
 
 # multilog artifacts
 files/log/main/

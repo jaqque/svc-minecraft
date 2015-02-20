@@ -1,0 +1,8 @@
+1024m
+RAM allocated to JVM, sets both -Xms and -Xmx
+
+Use RAM_OPTS to set -Xms and -Xmx seperately. If RAM_OPTS is set, then this file
+is ignored.
+
+eg:
+echo -Xms256m -Xmx2048m > RAM_OPTS
